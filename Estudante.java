@@ -32,7 +32,7 @@ public class Estudante {
         boolean disciplinaEncontrada = false;
         int indiceDisciplinaEncontrada = 0;
 
-        for (int i = 0; i < disciplinas.length; i++) {
+        for (int i = 0; i < posicao; i++) {
             if (nomeDisciplina.equals(disciplinas[i])) {
                 disciplinaEncontrada = true;
                 indiceDisciplinaEncontrada = i;
@@ -77,13 +77,37 @@ public class Estudante {
 
     }
 
-    public void removerDisciplina() {
-        
+    public void removerDisciplina(String nomeDisciplina) {
+        int indiceRemover = -1;
+
+        for (int i = 0; i < posicao; i++) {
+            if (disciplinas[i] != null && disciplinas[i].equals(nomeDisciplina)) {
+                indiceRemover = i;
+                break;
+            }
+        }
+
+        if (indiceRemover != -1) {
+            for (int i = indiceRemover; i < posicao - 1; i++) {
+                disciplinas[i] = disciplinas[i + 1];
+                notas[i] = notas[i + 1];
+            }
+
+            // limpar ultima posicao
+            disciplinas[posicao - 1] = null;
+            notas[posicao - 1] = -1;
+            posicao--;
+        }
     }
 
-    // public double getNota() {
-    // return this.notas[0];
-    // }
+    public boolean estaMatriculado(String nomeDisciplina) {
+        for (int i = 0; i < posicao; i++) {
+            if (disciplinas[i] != null && disciplinas[i].equals(nomeDisciplina)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public String toString() {
@@ -91,7 +115,7 @@ public class Estudante {
                 "Nome: " + nomeEstudante + "\n" +
                 "Data nascimento: " + dataNascimento + "\n" +
                 "Disciplinas: " + Arrays.toString(disciplinas) + "\n" +
-                "Notas: " + Arrays.toString(notas)  + "\n" +
+                "Notas: " + Arrays.toString(notas) + "\n" +
                 "-------------------------";
     }
 }

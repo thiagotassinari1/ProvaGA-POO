@@ -17,41 +17,44 @@ public class Escola {
         this.posicaoEstudantes = 0;
     }
 
-    // fazer verificação pra caso tente colocar mais disciplinas que o limite
     public void adicionarDisciplina(String nomeDisciplina, String profResponsavel) {
 
-        for (int i = 0; i < disciplinasOferecidas.length; i++) {
-
-            if (disciplinasOferecidas[i] == null) {
-                Disciplina novaDisciplina = new Disciplina(nomeDisciplina, profResponsavel);
-                disciplinasOferecidas[posicao] = novaDisciplina;
-                posicao++;
-                System.out.println("Disciplina cadastrada com sucesso!");
-                return;
-            } else if (nomeDisciplina.equals(disciplinasOferecidas[i].getNome())) {
-                System.out.println("Disciplina já cadastrada.");
-                return;
+        if (posicao < disciplinasOferecidas.length) {
+            for (int i = 0; i < posicao; i++) {
+                if (disciplinasOferecidas[i].getNome().equals(nomeDisciplina)) {
+                    System.out.println("Disciplina já cadastrada.");
+                    return;
+                }
             }
+
+            Disciplina novaDisciplina = new Disciplina(nomeDisciplina, profResponsavel);
+            disciplinasOferecidas[posicao] = novaDisciplina;
+            posicao++;
+            System.out.println("Disciplina cadastrada com sucesso!");
+        } else {
+            System.out.println("Não é possível criar mais disciplinas. Limite atingido.");
+            return;
         }
 
     }
 
-    // fazer verificação pra caso tente colocar mais estudantes que o limite
-    // colocar pra listar os estudantes criados igual eu fiz com as disciplinas pra
-    // ver se ta criando certinho sem duplicar nem nada
     public void criarEstudante(String nomeEstudante, String dataNascimento) {
-        for (int i = 0; i < estudantesCriados.length; i++) {
 
-            if (estudantesCriados[i] == null) {
-                Estudante novoEstudante = new Estudante(nomeEstudante, dataNascimento);
-                estudantesCriados[posicaoEstudantes] = novoEstudante;
-                posicaoEstudantes++;
-                System.out.println("Estudante criado com sucesso!");
-                return;
-            } else if (nomeEstudante.equals(estudantesCriados[i].getNome())) {
-                System.out.println("Estudante já cadastrado.");
-                return;
+        if (posicaoEstudantes < estudantesCriados.length) {
+            for (int i = 0; i < posicaoEstudantes; i++) {
+                if (estudantesCriados[i].getNome().equals(nomeEstudante)) {
+                    System.out.println("Estudante já cadastrado.");
+                    return;
+                }
             }
+
+            Estudante novoEstudante = new Estudante(nomeEstudante, dataNascimento);
+            estudantesCriados[posicaoEstudantes] = novoEstudante;
+            posicaoEstudantes++;
+            System.out.println("Estudante criado com sucesso!");
+        } else {
+            System.out.println("Não é possível criar mais estudantes. Limite atingido.");
+            return;
         }
     }
 
@@ -59,15 +62,17 @@ public class Escola {
         Disciplina disciplinaEncontrada = null;
         Estudante estudanteEncontrado = null;
 
-        for (int i = 0; i < estudantesCriados.length; i++) {
-            if (estudantesCriados[i].getNome().equals(nomeEstudante)) {
+        // achar estudante
+        for (int i = 0; i < posicaoEstudantes; i++) {
+            if (estudantesCriados[i] != null && estudantesCriados[i].getNome().equals(nomeEstudante)) {
                 estudanteEncontrado = estudantesCriados[i];
                 break;
             }
         }
 
-        for (int i = 0; i < disciplinasOferecidas.length; i++) {
-            if (disciplinasOferecidas[i].getNome().equals(nomeDisciplina)) {
+        // achar disciplina
+        for (int i = 0; i < posicao; i++) {
+            if (disciplinasOferecidas[i] != null && disciplinasOferecidas[i].getNome().equals(nomeDisciplina)) {
                 disciplinaEncontrada = disciplinasOferecidas[i];
                 break;
             }
@@ -81,26 +86,31 @@ public class Escola {
             System.out.println("Disciplina não encontrada.");
             return;
         }
-        if (disciplinaEncontrada != null && estudanteEncontrado != null) {
-            estudanteEncontrado.matricularEstudante(nomeDisciplina);
-            disciplinaEncontrada.matricularEstudante(estudanteEncontrado);
-            System.out.println("Estudante matriculado com sucesso!");
+        if (estudanteEncontrado.estaMatriculado(nomeDisciplina)) {
+            System.out.println("O estudante " + nomeEstudante + " já está matriculado em " + nomeDisciplina + ".");
+            return;
         }
+
+        estudanteEncontrado.matricularEstudante(nomeDisciplina);
+        disciplinaEncontrada.matricularEstudante(estudanteEncontrado);
+        System.out.println("Estudante matriculado com sucesso!");
     }
 
     public void adicionarNota(String nomeEstudante, String nomeDisciplina, double nota) {
         boolean encontrouDisciplina = false;
         Estudante estudanteEncontrado = null;
 
-        for (int i = 0; i < estudantesCriados.length; i++) {
-            if (estudantesCriados[i].getNome().equals(nomeEstudante)) {
+        // achar estudante
+        for (int i = 0; i < posicaoEstudantes; i++) {
+            if (estudantesCriados[i] != null && estudantesCriados[i].getNome().equals(nomeEstudante)) {
                 estudanteEncontrado = estudantesCriados[i];
                 break;
             }
         }
 
-        for (int i = 0; i < disciplinasOferecidas.length; i++) {
-            if (disciplinasOferecidas[i].getNome().equals(nomeDisciplina)) {
+        // achar disciplina
+        for (int i = 0; i < posicao; i++) {
+            if (disciplinasOferecidas[i] != null && disciplinasOferecidas[i].getNome().equals(nomeDisciplina)) {
                 encontrouDisciplina = true;
                 break;
             }
@@ -108,20 +118,29 @@ public class Escola {
 
         if (!encontrouDisciplina) {
             System.out.println("Disciplina não encontrada.");
-        } else if (estudanteEncontrado == null) {
-            System.out.println("Estudante não encontrado.");
-        } else if (encontrouDisciplina && estudanteEncontrado != null) {
-            estudanteEncontrado.adicionarNota(nota, nomeDisciplina);
-            System.out.println("Nota adicionada com sucesso!");
-            // System.out.println(estudanteEncontrado.getNota());
+            return;
         }
+        if (estudanteEncontrado == null) {
+            System.out.println("Estudante não encontrado.");
+            return;
+        }
+
+        if (!estudanteEncontrado.estaMatriculado(nomeDisciplina)) {
+            System.out.println("O estudante não está matriculado na disciplina informada.");
+            return;
+        }
+
+        estudanteEncontrado.adicionarNota(nota, nomeDisciplina);
+        System.out.println("Nota adicionada com sucesso!");
+
     }
 
     public void calcularMedia(String nomeEstudante) {
         Estudante estudanteEncontrado = null;
 
-        for (int i = 0; i < estudantesCriados.length; i++) {
-            if (estudantesCriados[i].getNome().equals(nomeEstudante)) {
+        // achar estudante
+        for (int i = 0; i < posicaoEstudantes; i++) {
+            if (estudantesCriados[i] != null && estudantesCriados[i].getNome().equals(nomeEstudante)) {
                 estudanteEncontrado = estudantesCriados[i];
                 break;
             }
@@ -137,8 +156,9 @@ public class Escola {
     public void estudantesReprovados(String nomeDisciplina) {
         Disciplina disciplinaEncontrada = null;
 
-        for (int i = 0; i < disciplinasOferecidas.length; i++) {
-            if (disciplinasOferecidas[i].getNome().equals(nomeDisciplina)) {
+        // achar disciplina
+        for (int i = 0; i < posicao; i++) {
+            if (disciplinasOferecidas[i] != null && disciplinasOferecidas[i].getNome().equals(nomeDisciplina)) {
                 disciplinaEncontrada = disciplinasOferecidas[i];
                 break;
             }
@@ -146,39 +166,43 @@ public class Escola {
 
         if (disciplinaEncontrada == null) {
             System.out.println("Disciplina não encontrada.");
-            return;
         } else {
             disciplinaEncontrada.estudantesReprovados(nomeDisciplina);
         }
     }
 
-    public void transferirEstudante(String nomeDisciplinaAntiga, String nomeEstudante, String nomeDisciplinaNova) {
+    public void transferirEstudante(String nomeEstudante, String nomeDisciplinaAntiga, String nomeDisciplinaNova) {
         Disciplina disciplinaAntiga = null;
         Disciplina disciplinaNova = null;
         Estudante estudanteEncontrado = null;
 
+        // achar estudante
+        for (int i = 0; i < posicaoEstudantes; i++) {
+            if (estudantesCriados[i] != null && estudantesCriados[i].getNome().equals(nomeEstudante)) {
+                estudanteEncontrado = estudantesCriados[i];
+                break;
+            }
+        }
+
         // achar disciplina antiga
-        for (int i = 0; i < disciplinasOferecidas.length; i++) {
-            if (disciplinasOferecidas[i].getNome().equals(nomeDisciplinaAntiga)) {
+        for (int i = 0; i < posicao; i++) {
+            if (disciplinasOferecidas[i] != null && disciplinasOferecidas[i].getNome().equals(nomeDisciplinaAntiga)) {
                 disciplinaAntiga = disciplinasOferecidas[i];
                 break;
             }
         }
 
         // achar disciplina nova
-        for (int i = 0; i < disciplinasOferecidas.length; i++) {
-            if (disciplinasOferecidas[i].getNome().equals(nomeDisciplinaNova)) {
+        for (int i = 0; i < posicao; i++) {
+            if (disciplinasOferecidas[i] != null && disciplinasOferecidas[i].getNome().equals(nomeDisciplinaNova)) {
                 disciplinaNova = disciplinasOferecidas[i];
                 break;
             }
         }
 
-        // achar estudante
-        for (int i = 0; i < estudantesCriados.length; i++) {
-            if (estudantesCriados[i].getNome().equals(nomeEstudante)) {
-                estudanteEncontrado = estudantesCriados[i];
-                break;
-            }
+        if (estudanteEncontrado == null) {
+            System.out.println("Estudante não encontrado.");
+            return;
         }
 
         if (disciplinaAntiga == null) {
@@ -191,13 +215,13 @@ public class Escola {
             return;
         }
 
-        if (estudanteEncontrado == null) {
-            System.out.println("Estudante não encontrado");
-        }
+        disciplinaAntiga.removerEstudante(nomeEstudante);
+        disciplinaNova.matricularEstudante(estudanteEncontrado);
+        estudanteEncontrado.removerDisciplina(nomeDisciplinaAntiga);
+        estudanteEncontrado.matricularEstudante(nomeDisciplinaNova);
 
-        if (disciplinaAntiga != null && disciplinaNova != null && estudanteEncontrado != null) {
-            
-        }
+        System.out.println("Estudante " + nomeEstudante + " transferido de " + nomeDisciplinaAntiga + " para "
+                + nomeDisciplinaNova + " com sucesso!");
     }
 
     public void listarDisciplinas() {

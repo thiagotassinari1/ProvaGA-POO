@@ -44,20 +44,29 @@ public class Disciplina {
         }
     }
 
-    public void removerEstudante(String nomeDisciplina, String nomeEstudante) {
+    public void removerEstudante(String nomeEstudante) {
+        int indiceRemover = -1;
 
-        if (posicao == 0) {
-            System.out.println("Não há estudantes matriculados.");
-        } else {
-            for (int i = posicao; i < estudantesMatriculados.length; i++) {
+        for (int i = 0; i < estudantesMatriculados.length; i++) {
+            if (estudantesMatriculados[i] != null && estudantesMatriculados[i].getNome().equals(nomeEstudante)) {
+                indiceRemover = i;
+                break;
+            }
+        }
+
+        if (indiceRemover != -1) {
+            // lógica pra arrumar os elementos dentro do array
+            for (int i = indiceRemover; i < posicao - 1; i++) {
                 estudantesMatriculados[i] = estudantesMatriculados[i + 1];
             }
 
             // limpar a última posição
             estudantesMatriculados[posicao - 1] = null;
-
             posicao--;
-            System.out.println("Estudante removido com sucesso!");
+
+            System.out.println("Estudante removido da disciplia " + nomeDisciplina + " com sucesso!");
+        } else {
+            System.out.println("Estudante não encontrado na disciplina " + nomeDisciplina);
         }
 
     }
