@@ -22,8 +22,6 @@ public class Main {
 
         Escola escola = new Escola(nomeEscola, cnpj);
 
-        System.out.print(escola.toString());
-
         return escola;
     }
 
@@ -36,7 +34,6 @@ public class Main {
         String profResponsavel = sc.nextLine().trim();
 
         escolaCriada.adicionarDisciplina(nomeDisciplina, profResponsavel);
-        // escolaCriada.listarDisciplinas();
     }
 
     public static void criarEstudante(Scanner sc, Escola escolaCriada) {
@@ -48,7 +45,6 @@ public class Main {
         String dataNascimento = sc.nextLine().trim();
 
         escolaCriada.criarEstudante(nomeEstudante, dataNascimento);
-        escolaCriada.listarEstudantes();
     }
 
     public static void matricularEstudante(Scanner sc, Escola escolaCriada) {
@@ -171,7 +167,7 @@ public class Main {
                         break;
                     }
                     transferirEstudante(sc, escolaCriada);
-
+                    break;
                 case 0:
                     System.out.println("Saindo do programa.");
 

@@ -33,7 +33,7 @@ public class Disciplina {
 
         boolean reprovado = false;
         for (int i = 0; i < estudantesMatriculados.length; i++) {
-            if (estudantesMatriculados[i] != null && estudantesMatriculados[i].notaDisciplina(nomeDisciplina) < 6.0) {
+            if (estudantesMatriculados[i] != null && estudantesMatriculados[i].notaDisciplina(nomeDisciplina) < 6.0 && estudantesMatriculados[i].notaDisciplina(nomeDisciplina) != -1) {
                 System.out.println(estudantesMatriculados[i].toString());
                 reprovado = true;
             }
